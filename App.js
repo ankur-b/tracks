@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {View, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -11,8 +11,11 @@ import TrackDetailScreen from './src/screens/TrackDetailScreen';
 import TrackListScreen from './src/screens/TrackListScreen';
 import TrackCreateScreen from './src/screens/TrackCreateScreen';
 import {Provider as AuthProvider} from './src/context/AuthContext';
-
-const Stack = createStackNavigator();
+import {setNavigator} from './src/navigationRef';
+import {Context as AuthContext} from './src/context/AuthContext';
+import ResolveAuthScreen from './src/screens/ResolveAuthScreen';
+import {Provider as LocationProvider} from './src/context/LocationContext';
+import {Provider as TrackProvider} from './src/context/TrackContext';
 const LoginStack = createStackNavigator();
 const TrackStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,6 +33,7 @@ const LoginStackScreen = () => {
       screenOptions={{
         headerShown: false,
       }}>
+      <LoginStack.Screen name="ResolveAuth" component={ResolveAuthScreen} />
       <LoginStack.Screen name="Signup" component={SignupScreen} />
       <LoginStack.Screen name="Signin" component={SigninScreen} />
     </LoginStack.Navigator>
@@ -44,14 +48,25 @@ const MainFlowStackScreen = () => {
     </Tab.Navigator>
   );
 };
-const App = () => {
+const Stacks = () => {
+  const {state} = useContext(AuthContext);
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        {false ? <MainFlowStackScreen /> : <LoginStackScreen />}
-      </NavigationContainer>
-    </AuthProvider>
+    <NavigationContainer>
+      {console.log(state)}
+      {state.token ? <MainFlowStackScreen /> : <LoginStackScreen />}
+    </NavigationContainer>
   );
 };
 
+const App = () => {
+  return (
+    <TrackProvider>
+      <LocationProvider>
+        <AuthProvider>
+          <Stacks />
+        </AuthProvider>
+      </LocationProvider>
+    </TrackProvider>
+  );
+};
 export default App;

@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect,useContext} from 'react';
 import {
   Container,
   Header,
@@ -11,14 +11,21 @@ import {
   Label,
   Title,
 } from 'native-base';
+import ResolveAuthScreen from './ResolveAuthScreen'
 import Spacer from '../components/Spacer';
 import {Context as AuthContext} from '../context/AuthContext';
-const SignupScreen = () => {
-  const {state, signup} = useContext(AuthContext);
+const SignupScreen = ({navigation}) => {
+  const {state, signup,clearErrorMessage} = useContext(AuthContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      clearErrorMessage()
+    }); 
+    return unsubscribe;
+  }, [navigation])
   return (
     <Container>
       <Header>
@@ -26,6 +33,7 @@ const SignupScreen = () => {
           <Title>SignUp</Title>
         </Body>
       </Header>
+    
       <Form>
         <Spacer>
           <Text style={{fontSize: 30}}>Sign Up for Tracker</Text>
@@ -66,7 +74,7 @@ const SignupScreen = () => {
           Already a User?
         </Text>
         <Spacer />
-        <Button full primary>
+        <Button full primary onPress={()=>navigation.navigate('Signin')}>
           <Text> Sign In </Text>
         </Button>
       </Form>
