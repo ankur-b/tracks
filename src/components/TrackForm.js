@@ -3,7 +3,7 @@ import {Input, Form, Item, Label, Button, Text} from 'native-base';
 import Spacer from '../components/Spacer';
 import {Context as LocationContext} from '../context/LocationContext';
 import useSaveTrack from '../hooks/useSaveTrack'
-const TrackForm = () => {
+const TrackForm = ({navigation}) => {
   const {
     state: {name, recording, locations},
     startRecording,

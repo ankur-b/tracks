@@ -51,7 +51,10 @@ const MainFlowStackScreen = () => {
 const Stacks = () => {
   const {state} = useContext(AuthContext);
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      ref={navigator => {
+        setNavigator(navigator);
+      }}>
       {console.log(state)}
       {state.token ? <MainFlowStackScreen /> : <LoginStackScreen />}
     </NavigationContainer>
